@@ -283,6 +283,13 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             }
         }
     }
+    @objc func showNoInputFileError(){
+        let alert = NSAlert()
+        alert.messageText = "待签名ipa路径有误"
+        alert.informativeText = "路径未输入或无法查找到该文件"
+        alert.addButton(withTitle: "好的")
+        alert.beginSheetModal(for: window!)
+    }
     
     @objc func populateCodesigningCerts() {
         CodesigningCertsPopup.removeAllItems()
@@ -584,7 +591,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             newShortVersion = self.appShortVersion.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             newVersion = self.appVersion.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             shouldCheckPlugins = ignorePluginsCheckbox.state == .off
-            shouldSkipGetTaskAllow = noGetTaskAllowCheckbox.state == .off
+            shouldSkipGetTaskAllow = noGetTaskAllowCheckbox.state == .on
         }
 
         let provisioningFile = self.profileFilename
@@ -1171,6 +1178,10 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     }
     
     @IBAction func doSign(_ sender: NSButton) {
+        if InputFileText.stringValue.isEmpty {
+            showNoInputFileError()
+            return;
+        }
         if codesigningCerts.count > 0 {
             NSApplication.shared.windows[0].makeFirstResponder(self)
             startSigning()
