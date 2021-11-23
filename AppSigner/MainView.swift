@@ -548,6 +548,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             let saveDialog = NSSavePanel()
             saveDialog.allowedFileTypes = ["ipa"]
             saveDialog.nameFieldStringValue = inputFile.lastPathComponent.stringByDeletingPathExtension + "_ReSign"
+            saveDialog.directoryURL = NSURL.fileURL(withPath: NSHomeDirectory() + "/Desktop")
             if saveDialog.runModal().rawValue == NSFileHandlingPanelOKButton {
                 outputFile = saveDialog.url!.path
             } else {
@@ -842,10 +843,8 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                     let appBundleFrameworkFolderPath = appBundlePath.stringByAppendingPathComponent("Frameworks")
                     let currentFrameworkPath = appBundleFrameworkFolderPath + "/" + inputFramework.lastPathComponent
                     if fileManager.fileExists(atPath: currentFrameworkPath) {
-                        guard (try fileManager.replaceItemAt(URL(fileURLWithPath: currentFrameworkPath), withItemAt: URL(fileURLWithPath: inputFramework))) != nil else {
-                            setStatus("Error: Replace " + inputFramework.lastPathComponent + "falied")
-                            return
-                        }
+                       try? fileManager.removeItem(at: URL(fileURLWithPath: currentFrameworkPath))
+                       try fileManager.copyItem(at: URL(fileURLWithPath: inputFramework), to: URL(fileURLWithPath: currentFrameworkPath))
                     } else {
                         setStatus("Error: " + inputFramework.lastPathComponent + " not found");
                     }
