@@ -16,6 +16,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     @IBOutlet var CodesigningCertsPopup: NSPopUpButton!
     @IBOutlet var StatusLabel: NSTextField!
     @IBOutlet var InputFileText: NSTextField!
+    @IBOutlet var InputFrameworkFileText: NSTextField!
     @IBOutlet var BrowseButton: NSButton!
     @IBOutlet var StartButton: NSButton!
     @IBOutlet var NewApplicationIDTextField: NSTextField!
@@ -583,7 +584,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             newShortVersion = self.appShortVersion.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             newVersion = self.appVersion.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             shouldCheckPlugins = ignorePluginsCheckbox.state == .off
-            shouldSkipGetTaskAllow = noGetTaskAllowCheckbox.state == .on
+            shouldSkipGetTaskAllow = noGetTaskAllowCheckbox.state == .off
         }
 
         var provisioningFile = self.profileFilename
@@ -1132,7 +1133,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         }
         
     }
-    @IBAction func doBrowse(_ sender: AnyObject) {
+    @IBAction func doBrowse(_ sender: NSButton) {
         let openDialog = NSOpenPanel()
         openDialog.canChooseFiles = true
         openDialog.canChooseDirectories = false
@@ -1141,7 +1142,11 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         openDialog.allowedFileTypes = MainView.allowedFileTypes + MainView.allowedFileTypes.map({ $0.uppercased() })
         openDialog.runModal()
         if let filename = openDialog.urls.first {
-            InputFileText.stringValue = filename.path
+            if sender.tag == 1000 {
+                InputFileText.stringValue = filename.path
+            } else {
+                InputFrameworkFileText.stringValue = filename.path
+            }
         }
     }
     @IBAction func chooseSigningCertificate(_ sender: NSPopUpButton) {
