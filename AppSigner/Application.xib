@@ -157,9 +157,8 @@
             <point key="canvasLocation" x="140" y="154"/>
         </menu>
         <window title="iOS App Signer" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenNone="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="550" height="242"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1792" height="1095"/>
             <value key="minSize" type="size" width="550" height="242"/>
@@ -210,7 +209,7 @@
                             <action selector="doSign:" target="se5-gp-TjO" id="xHC-0Z-wyX"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jID-Ce-koR">
+                    <button verticalHuggingPriority="750" tag="1000" translatesAutoresizingMaskIntoConstraints="NO" id="jID-Ce-koR">
                         <rect key="frame" x="470" y="248" width="79" height="32"/>
                         <buttonCell key="cell" type="push" title="Browse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="G75-5L-8SZ">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -264,7 +263,7 @@
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GdX-jd-F08">
                         <rect key="frame" x="136" y="255" width="333" height="21"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="ipa文件路径" drawsBackground="YES" usesSingleLineMode="YES" id="fri-IK-93r">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="支持.ipa后缀文件路径" drawsBackground="YES" usesSingleLineMode="YES" id="fri-IK-93r">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -359,7 +358,7 @@
                     </textField>
                     <button toolTip="Don't add get-task-allow entitlement, as it might break certain apps" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vp1-aK-9A4">
                         <rect key="frame" x="390" y="60" width="134" height="18"/>
-                        <buttonCell key="cell" type="check" title="No get-task-allow" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="WUb-nf-ekk">
+                        <buttonCell key="cell" type="check" title="No get-task-allow" bezelStyle="regularSquare" imagePosition="left" inset="2" id="WUb-nf-ekk">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -384,7 +383,7 @@
                     </button>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="R8e-dP-hPX">
                         <rect key="frame" x="136" y="226" width="333" height="21"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="待替换framework路径" drawsBackground="YES" usesSingleLineMode="YES" id="wjY-I1-Oat">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="支持.framework后缀文件路径" drawsBackground="YES" usesSingleLineMode="YES" id="wjY-I1-Oat">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -469,6 +468,7 @@
                     <outlet property="BrowseButton" destination="jID-Ce-koR" id="NWk-QW-2ha"/>
                     <outlet property="CodesigningCertsPopup" destination="aVt-Sy-tta" id="Agf-8A-13v"/>
                     <outlet property="InputFileText" destination="GdX-jd-F08" id="7p7-B8-sHq"/>
+                    <outlet property="InputFrameworkFileText" destination="R8e-dP-hPX" id="6VR-wC-dWD"/>
                     <outlet property="NewApplicationIDTextField" destination="YSK-IJ-CeM" id="G8I-Gb-Khr"/>
                     <outlet property="ProvisioningProfilesPopup" destination="4SO-6J-jzo" id="nfx-Js-6Gt"/>
                     <outlet property="StartButton" destination="Q7q-HU-46D" id="SQy-93-exx"/>

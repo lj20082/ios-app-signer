@@ -58,6 +58,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
     
     //MARK: Drag / Drop
     static let urlFileTypes = ["ipa", "deb"]
+    static let frameworkFileType = ["framework"]
     static let allowedFileTypes = urlFileTypes + ["app", "appex", "xcarchive"]
     static let fileTypes = allowedFileTypes + ["mobileprovision"]
     @objc var fileTypeIsOk = false
@@ -170,7 +171,6 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 
                 NSApplication.shared.terminate(self)
             }
-            UpdatesController.checkForUpdate()
         }
     }
     
@@ -261,9 +261,6 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             return output
         }
         let rawResult = securityResult.output.components(separatedBy: "\"")
-        
-        var index: Int
-        
         for index in stride(from: 0, through: rawResult.count - 2, by: 2) {
             if !(rawResult.count - 1 < index + 1) {
                 output.append(rawResult[index+1])
@@ -587,7 +584,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             shouldSkipGetTaskAllow = noGetTaskAllowCheckbox.state == .off
         }
 
-        var provisioningFile = self.profileFilename
+        let provisioningFile = self.profileFilename
         let inputStartsWithHTTP = inputFile.lowercased().substring(to: inputFile.index(inputFile.startIndex, offsetBy: 4)) == "http"
         var eggCount: Int = 0
         var continueSigning: Bool? = nil
@@ -1139,7 +1136,11 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         openDialog.canChooseDirectories = false
         openDialog.allowsMultipleSelection = false
         openDialog.allowsOtherFileTypes = false
-        openDialog.allowedFileTypes = MainView.allowedFileTypes + MainView.allowedFileTypes.map({ $0.uppercased() })
+        if sender.tag == 1000 {
+            openDialog.allowedFileTypes = MainView.allowedFileTypes + MainView.allowedFileTypes.map({ $0.uppercased() })
+        } else{
+            openDialog.allowedFileTypes = MainView.frameworkFileType
+        }
         openDialog.runModal()
         if let filename = openDialog.urls.first {
             if sender.tag == 1000 {
