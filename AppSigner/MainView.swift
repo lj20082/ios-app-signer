@@ -547,7 +547,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
             //MARK: Get output filename
             let saveDialog = NSSavePanel()
             saveDialog.allowedFileTypes = ["ipa"]
-            saveDialog.nameFieldStringValue = inputFile.lastPathComponent.stringByDeletingPathExtension
+            saveDialog.nameFieldStringValue = inputFile.lastPathComponent.stringByDeletingPathExtension + "_ReSign"
             if saveDialog.runModal().rawValue == NSFileHandlingPanelOKButton {
                 outputFile = saveDialog.url!.path
             } else {
@@ -566,6 +566,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         //MARK: Set up variables
         var warnings = 0
         var inputFile : String = ""
+        var inputFramework: String = ""
         var signingCertificate : String?
         var newApplicationID : String = ""
         var newDisplayName : String = ""
@@ -575,6 +576,7 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
         DispatchQueue.main.sync {
             downloadProgress.isHidden = true
             inputFile = self.InputFileText.stringValue
+            inputFramework = self.InputFrameworkFileText.stringValue
             signingCertificate = self.CodesigningCertsPopup.selectedItem?.title
             newApplicationID = self.NewApplicationIDTextField.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             newDisplayName = self.appDisplayName.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -831,9 +833,23 @@ class MainView: NSView, URLSessionDataDelegate, URLSessionDelegate, URLSessionDo
                 let appBundleInfoPlist = appBundlePath.stringByAppendingPathComponent("Info.plist")
                 let appBundleProvisioningFilePath = appBundlePath.stringByAppendingPathComponent("embedded.mobileprovision")
                 let useAppBundleProfile = (provisioningFile == nil && fileManager.fileExists(atPath: appBundleProvisioningFilePath))
-                
+
                 //MARK: Delete CFBundleResourceSpecification from Info.plist
                 Log.write(Process().execute(defaultsPath, workingDirectory: nil, arguments: ["delete",appBundleInfoPlist,"CFBundleResourceSpecification"]).output)
+                
+                //MARK: Copy Framework if Need
+                if inputFramework != "" {
+                    let appBundleFrameworkFolderPath = appBundlePath.stringByAppendingPathComponent("Frameworks")
+                    let currentFrameworkPath = appBundleFrameworkFolderPath + "/" + inputFramework.lastPathComponent
+                    if fileManager.fileExists(atPath: currentFrameworkPath) {
+                        guard (try fileManager.replaceItemAt(URL(fileURLWithPath: currentFrameworkPath), withItemAt: URL(fileURLWithPath: inputFramework))) != nil else {
+                            setStatus("Error: Replace " + inputFramework.lastPathComponent + "falied")
+                            return
+                        }
+                    } else {
+                        setStatus("Error: " + inputFramework.lastPathComponent + " not found");
+                    }
+                }
                 
                 //MARK: Copy Provisioning Profile
                 if provisioningFile != nil {
